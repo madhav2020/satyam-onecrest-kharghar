@@ -6,8 +6,8 @@
   var CONFIG = {
     phone: '',          // e.g. '+91 98xxxxxxxx'  (empty = call buttons stay hidden)
     whatsapp: '',       // digits only with country code, e.g. '9198xxxxxxxx' (empty = hidden)
-    recoApiUrl: '',     // RECO CRM API base, copied from the old site's data.js at wiring time
-    recoApiKey: '',     // the NEW landing page's lp_ key (created in the CRM at launch)
+    recoApiUrl: 'https://api.recoproperty.com/api', // RECO CRM API (same as the other landing sites)
+    recoApiKey: '',     // the NEW landing page's lp_ key: create the Landing Page record in the CRM at launch, then paste it here
     brochureUrl: '/assets/brochure/one-crest-kharghar-brochure.pdf',
     breakdownUrl: '/assets/data/cost-breakdown.json',
     rememberHours: 48,  // a visitor who filled a form is not asked again for 2 days
@@ -149,15 +149,61 @@
     return '';
   }
 
-  /* Sends the lead to the RECO CRM. To be wired at launch by copying the old site's working call
-     (same endpoint and body), with the NEW landing page's lp_ key. Until then: works as a demo on localhost only.
-     data.intent = price | brochure | video-film | video-sample | plan | exit ; data.detail = which plan (if any) */
+  /* ---------- RECO CRM (same calls and fields as the other landing sites) ---------- */
+  var IS_TEST = /(^|[?&])reco_test(=|&|$)/.test(location.search);   // test leads: saved and routed, hidden from Campaign Analytics
+  var INTENT_LABEL = {
+    price: 'Price list', exit: 'Price list (exit prompt)', brochure: 'Brochure download',
+    'video-film': 'Project film video', 'video-sample': 'Sample flat walkthrough video', plan: 'Floor plan'
+  };
+  function getUtmParams() {
+    var params = new URLSearchParams(location.search);
+    var keys = ['utm_source','utm_medium','utm_campaign','utm_id','utm_term','utm_content','utm_device','utm_network','adgroupid','matchtype','feeditemid','gclid'];
+    var utm = {};
+    keys.forEach(function (k) { if (params.get(k)) utm[k] = params.get(k); });
+    if (!utm.utm_source) utm.utm_source = 'direct';
+    if (!utm.utm_medium) utm.utm_medium = 'none';
+    return utm;
+  }
+  var CRM_READY = !IS_LOCAL && CONFIG.recoApiUrl && CONFIG.recoApiKey;
+  var recoVisitorId = null;
+  function trackRecoVisitor() {
+    if (!CRM_READY) return;
+    fetch(CONFIG.recoApiUrl + '/visitors/track', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apiKey: CONFIG.recoApiKey, utm: getUtmParams(), referrer: document.referrer, pageUrl: location.href })
+    }).then(function (r) { return r.json(); }).then(function (d) {
+      if (d && d.visitorId) { recoVisitorId = d.visitorId; session('reco_vid', d.visitorId); }
+    }).catch(function () {});
+  }
+  trackRecoVisitor();
+
+  /* Sends one lead. On localhost it only pretends (the CRM refuses localhost), so local tests never create leads. */
   function submitLead(data) {
-    if (!CONFIG.recoApiUrl || !CONFIG.recoApiKey) {
-      if (IS_LOCAL) { console.warn('[One Crest] CRM not wired yet: demo success on localhost only', data.intent, data.detail || ''); return Promise.resolve(); }
-      return Promise.reject(new Error('not-wired'));
-    }
-    return Promise.reject(new Error('not-wired')); // replaced at wiring time
+    var label = INTENT_LABEL[data.intent] || data.intent;
+    if (IS_LOCAL) { console.warn('[One Crest] localhost: lead NOT sent (demo only):', label, data.detail || ''); return Promise.resolve(); }
+    if (!CRM_READY) return Promise.reject(new Error('crm-not-configured'));
+    var custom = {
+      cta_heading: label,
+      service_type: 'Property Enquiry',
+      source: label + ' one crest landing page',
+      interest: data.interest || '',
+      request_detail: data.detail || ''
+    };
+    if (IS_TEST) custom.reco_test = 'true';
+    return fetch(CONFIG.recoApiUrl + '/landing-leads', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        apiKey: CONFIG.recoApiKey,
+        name: data.name, phone: data.phone, email: data.email || '', countryCode: '+91',
+        message: (IS_TEST ? 'reco_test · ' : '') + 'Requested: ' + label + (data.detail ? ' (' + data.detail + ')' : '') + (data.interest ? ' · Interested in ' + data.interest : ''),
+        customFields: custom,
+        utm: getUtmParams(),
+        visitorId: recoVisitorId || session('reco_vid')
+      })
+    }).then(function (r) { return r.json(); }).then(function (d) {
+      if (!d || !d.success) throw new Error((d && d.message) || 'crm-error');
+      return d;
+    });
   }
 
   function renderBreakdown() {

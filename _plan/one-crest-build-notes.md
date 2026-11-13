@@ -43,6 +43,15 @@ Built in the cloud workspace while the Mac connection was down. **Copy the conte
 ## v1.5 (13 Nov, night)
 - **Video tiles move:** a slow camera-like zoom + sideways drift, 12 s one way then 12 s back (no jump; was 20 s, sped up 13 Nov). The two tiles drift in different directions. Runs only while the tiles are on screen; still for reduced-motion users. CSS only (same images, no extra download); CLS stays 0. The hero keeps its own 18 s zoom.
 
+## v1.7 (13 Nov, night): form connected to the RECO CRM
+- Same calls and fields as show_stopper_lp / Raheja: `POST {api}/visitors/track` on page load and `POST {api}/landing-leads` on each form (apiKey, name, phone, email, countryCode +91, message, customFields, utm, visitorId). The UTM keys are the same 12 as the other sites (direct/none defaults).
+- `customFields`: `cta_heading` + `source` = what was asked (Price list / Price list (exit prompt) / Brochure download / Project film video / Sample flat walkthrough video / Floor plan), `interest`, `request_detail` (which plan), `service_type: Property Enquiry`. `message` = "Requested: … · Interested in …".
+- **Test leads:** open the site with `?reco_test=1` → `customFields.reco_test = "true"` and the message starts with "reco_test ·". ⚠️ At the launch test, confirm in the CRM that this lead is hidden from Campaign Analytics (the server rule for reco_test wasn't checked from here).
+- **localhost never sends leads** (demo only; the CRM refuses localhost anyway).
+- **The URL clean-up script** (removes name/contact/email/phone/mobile from the address before GTM runs) is in `<head>`, the same as the other sites.
+- **Remaining for launch:** paste the new Landing Page `lp_` key into `CONFIG.recoApiKey` in `main.js` (until then a live site shows "Sorry, that did not go through").
+- Checked with a fake domain + a test key + intercepted CRM calls (no real leads made): bodies correct, URL cleaned, reco_test flag set, a remembered visitor's plan request sent without the form, and a CRM refusal shows an error and doesn't remember the visitor.
+
 ## Checks done
 - JSON-LD parses; 1 H1; all local files exist (except privacy/terms, see below); JS syntax OK
 - Headless Chrome, phone (390 px) and desktop (1440 px): no console errors, no failed requests, **CLS 0.000**, LCP = H1 at ~0.1 s (local)
@@ -50,7 +59,7 @@ Built in the cloud workspace while the Mac connection was down. **Copy the conte
 - All images load on scroll; full-scroll transfer on a phone ≈ 1.85 MB
 
 ## Still to do (in this order)
-1. **Wire the form to the CRM:** copy the old site's working lead call (`show_stopper_lp/script.js`) into `submitLead()` in `main.js`; set `recoApiUrl` and the NEW landing page's `lp_` key (CRM Landing Page record, made at launch). Keep `reco_test` for test leads. Add the URL clean-up script and first/last-touch capture (B4–B5).
+1. ~~Wire the form to the CRM~~ done in v1.7. Left: the `lp_` key at launch; first/last-touch capture (B4–B5) later.
 2. **Privacy policy + Terms pages** (`/privacy-policy.html`, `/terms.html`): adapt from the old site (currently missing → links 404).
 3. **Phone / WhatsApp:** set `CONFIG.phone` and `CONFIG.whatsapp` in `main.js`; the buttons appear by themselves.
 4. **Domain:** replace every `__SITE_URL__` (index.html, robots.txt, sitemap.xml, llms.txt, .htaccess) with `https://<domain>` (no trailing slash). The pre-launch check: `grep -rn __SITE_URL__ .` must print nothing.

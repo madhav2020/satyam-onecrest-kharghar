@@ -25,7 +25,26 @@
   <link rel="icon" href="/assets/logos/one-crest-logo.webp" type="image/webp" />
   <link rel="preload" as="image" href="/assets/hero/one-crest-kharghar-hero-mobile.webp" media="(max-width: 767px)" fetchpriority="high" />
   <link rel="preload" as="image" href="/assets/hero/one-crest-kharghar-hero-desktop.webp" media="(min-width: 768px)" fetchpriority="high" />
-  <link rel="stylesheet" href="/style.css?v=20261113g" />
+  <link rel="stylesheet" href="/style.css?v=20261113h" />
+
+  <!-- Remove personal data from the URL before any tracking runs (same as the other landing sites) -->
+  <script>
+    (function () {
+      try {
+        var search = window.location.search;
+        if (!search || search.length < 2) return;
+        var drop = ["name", "contact", "email", "phone", "mobile"];
+        var parts = search.slice(1).split("&"), kept = [];
+        for (var i = 0; i < parts.length; i++) {
+          var key = parts[i].split("=")[0];
+          try { key = decodeURIComponent(key.replace(/\+/g, " ")); } catch (e) {}
+          if (drop.indexOf(key.toLowerCase()) === -1) kept.push(parts[i]);
+        }
+        if (kept.length === parts.length) return;
+        window.history.replaceState(window.history.state, "", window.location.pathname + (kept.length ? "?" + kept.join("&") : "") + window.location.hash);
+      } catch (e) {}
+    })();
+  </script>
 
   <!-- Google Tag Manager (same container as the old site, decision D2). Not loaded on localhost. -->
   <script>
@@ -514,6 +533,6 @@
     <img alt="" />
   </dialog>
 
-  <script src="/main.js?v=20261113f" defer></script>
+  <script src="/main.js?v=20261113h" defer></script>
 </body>
 </html>

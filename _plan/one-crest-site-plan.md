@@ -183,6 +183,8 @@ Until the old site is `noindex`, Google and AI tools can see **two prices** for 
 - **Note:** we have **no One Crest video yet**. The old videos say "Codename Showstopper / Coming soon" and won't be used. So at launch the hero is the zoom effect only (one image, or 2–3 renders crossfading).
 - **Image:** the brochure's tower renders have text baked in (logo, "Roberto Cavalli"). Mobile uses a tower-only crop. Desktop uses the tower render with the H1 placed so it doesn't clash. A clean render without text, from the developer, would be better (optional ask).
 
+**Decided (13 Nov):** at launch the hero is **3 renders crossfading, each slowly zooming**: tower → Stellar Lobby → Verve Clubhouse. Only the first (tower) image loads at first; the other two load after the page is ready. When a One Crest video arrives, it plays on **desktop only**; phones keep the zoom images.
+
 ## 8. Technical build checklist
 
 - [ ] Static HTML/CSS/JS. Reuse the code structure from `Raheja_District_Prime_2` (newest), but write all text fresh.
