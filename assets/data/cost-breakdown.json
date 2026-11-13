@@ -1,0 +1,16 @@
+{
+  "asOn": "18 July 2026",
+  "floor": "5th floor",
+  "note": "Legal charges, society formation, 24 months' maintenance and 1% TDS are not included in the all-in total. Prices change by floor and date; the price on the booking date applies.",
+  "columns": ["2 BHK Label", "3 BHK Luxe", "3 BHK Couture", "4 BHK Atelier", "4 BHK Maison En-Suite"],
+  "rows": [
+    { "label": "RERA carpet area", "values": ["859 sq ft", "1,232 sq ft", "1,275 sq ft", "1,942 sq ft", "2,012 sq ft"] },
+    { "label": "Usable carpet area", "values": ["951 sq ft", "1,480 sq ft", "1,567 sq ft", "2,320 sq ft", "2,390 sq ft"] },
+    { "label": "Car parks", "values": ["1", "1", "1", "2", "2"] },
+    { "label": "Agreement value", "values": ["₹2,48,46,500", "₹3,80,82,000", "₹4,02,28,000", "₹5,99,38,000", "₹6,17,13,500"] },
+    { "label": "Stamp duty (7%)", "values": ["₹17,39,255", "₹26,65,740", "₹28,15,960", "₹41,95,660", "₹43,19,945"] },
+    { "label": "Registration", "values": ["₹30,000", "₹30,000", "₹30,000", "₹30,000", "₹60,000"] },
+    { "label": "GST (5%)", "values": ["₹12,42,325", "₹19,04,100", "₹20,11,400", "₹29,96,900", "₹30,85,675"] },
+    { "label": "All-in total", "values": ["₹2,78,58,080", "₹4,26,81,840", "₹4,50,85,360", "₹6,71,60,560", "₹6,91,79,120"], "total": true }
+  ]
+}

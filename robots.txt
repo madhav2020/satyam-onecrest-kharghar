@@ -1,0 +1,18 @@
+# robots.txt for One Crest Kharghar
+User-agent: *
+Content-Signal: ai-train=no, search=yes, ai-input=yes
+Allow: /
+Disallow: /*.pdf$
+Disallow: /assets/data/
+
+# AI search bots: allowed so AI answers can cite this site
+User-agent: OAI-SearchBot
+Allow: /
+User-agent: ChatGPT-User
+Allow: /
+User-agent: PerplexityBot
+Allow: /
+User-agent: Claude-SearchBot
+Allow: /
+
+Sitemap: __SITE_URL__/sitemap.xml
