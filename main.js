@@ -87,8 +87,30 @@
     'video-film': { title: 'Get the One Crest project film', button: 'Send me the video', done: 'Our team will send the project film on WhatsApp shortly.' },
     'video-sample': { title: 'Get the sample flat walkthrough', button: 'Send me the video', done: 'Our team will send the sample flat walkthrough on WhatsApp shortly.' },
     plan: { title: 'See the full floor plan', note: 'Fill this once to see all floor plans.', button: 'Show me the plan' },
-    exit: { title: 'Before you go: get the price list', note: 'All 5 One Crest home types with the full cost breakdown.', button: 'Send me the price list' }
+    exit: { title: 'Before you go: get the price list', note: 'All 5 One Crest home types with the full cost breakdown.', button: 'Send me the price list' },
+    // Extra offers used only by the repeating prompt (rotated at random, never the same one twice in a row)
+    visit: { title: 'Book a free site visit', note: 'Visit One Crest at Sector 20, Kharghar, near Shilp Chowk.', button: 'Book my visit', done: 'Our team will call you to fix a visit time.' },
+    'brochure-wa': { title: 'Get the One Crest brochure on WhatsApp', button: 'Send me the brochure', done: 'Our team will send the brochure on WhatsApp shortly.' },
+    details: { title: 'Get One Crest project details and video', note: 'Home types, amenities and the project film.', button: 'Send me the details', done: 'Our team will send the project details and film on WhatsApp shortly.' },
+    expert: { title: 'Talk to our One Crest expert', note: 'A free call about prices, plans and payment.', button: 'Call me back', done: 'Our expert will call you shortly.' },
+    offer: { title: 'Ask about the spot booking offer', note: 'Available only when you book at the site. We will share the details and fix a visit.', button: 'Tell me about the offer', done: 'Our team will call you with the offer details and a visit time.' }
   };
+  // Short text for the small card on phones (same offers as above)
+  var CARD = {
+    price: { line: 'All 5 home types with the full cost breakdown.', button: 'Get it now' },
+    visit: { line: 'See One Crest at Sector 20, Kharghar.', button: 'Book now' },
+    'brochure-wa': { line: 'The full brochure, sent on WhatsApp.', button: 'Send it' },
+    details: { line: 'Project film and details on WhatsApp.', button: 'Send it' },
+    expert: { line: 'A free call about prices, plans and payment.', button: 'Call me' },
+    offer: { line: 'Available only when you book at the site.', button: 'Ask now' }
+  };
+  var OFFER_ENDS = Date.parse('2027-01-01T00:00:00+05:30'); // spot booking offer runs till 31 Dec 2026 (IST), then drops out by itself
+  var OFFERS = Object.keys(CARD).filter(function (o) { return o !== 'offer' || Date.now() < OFFER_ENDS; }), lastOffer = '';
+  function nextOffer() {
+    var pool = OFFERS.filter(function (o) { return o !== lastOffer; });
+    lastOffer = pool[Math.floor(Math.random() * pool.length)];
+    return lastOffer;
+  }
 
   var dlg = $('#lead-dialog');
   var dlgForm = $('form', dlg);
@@ -126,7 +148,7 @@
       track('brochure_download');
       var a = document.createElement('a'); a.href = CONFIG.brochureUrl; a.download = ''; document.body.appendChild(a); a.click(); a.remove();
       if (repeat) toast('Your brochure download is starting.');
-    } else if (intent.indexOf('video') === 0) {
+    } else if (TEXT[intent] && TEXT[intent].done) { // videos, site visit, WhatsApp brochure, details, expert call, offer
       if (repeat) toast('Thanks, ' + first + '. ' + TEXT[intent].done);
     } else if (intent === 'plan') {
       var full = pending && pending.full;
@@ -153,7 +175,9 @@
   var IS_TEST = /(^|[?&])reco_test(=|&|$)/.test(location.search);   // test leads: saved and routed, hidden from Campaign Analytics
   var INTENT_LABEL = {
     price: 'Price list', exit: 'Price list (exit prompt)', brochure: 'Brochure download',
-    'video-film': 'Project film video', 'video-sample': 'Sample flat walkthrough video', plan: 'Floor plan'
+    'video-film': 'Project film video', 'video-sample': 'Sample flat walkthrough video', plan: 'Floor plan',
+    visit: 'Free site visit', 'brochure-wa': 'Brochure on WhatsApp', details: 'Project details and video',
+    expert: 'Talk to expert (call back)', offer: 'Spot booking offer (site visit)'
   };
   function getUtmParams() {
     var params = new URLSearchParams(location.search);
@@ -242,11 +266,11 @@
         saveLead(data);
         track('form_submit_success', { form_intent: intent, interest: data.interest });
         var first = data.name.split(' ')[0];
-        var isVideo = intent.indexOf('video') === 0;
+        var done = TEXT[intent] && TEXT[intent].done;
         msg.textContent = 'Thank you, ' + first + '. ' +
-          (isVideo ? TEXT[intent].done : intent === 'brochure' ? 'Your download is starting.' : intent === 'plan' ? '' : 'Here is the full cost breakdown.');
+          (done ? done : intent === 'brochure' ? 'Your download is starting.' : intent === 'plan' ? '' : 'Here is the full cost breakdown.');
         form.reset();
-        var closeDelay = isVideo ? 2500 : 900;
+        var closeDelay = done ? 2500 : 900;
         if (dlg.open) setTimeout(function () { dlg.close(); deliver(intent, data, false); }, closeDelay);
         else deliver(intent, data, false);
       }).catch(function () {
@@ -333,6 +357,14 @@
      Phones get a small slide-up card, not a full pop-up (Google lowers mobile rankings for pop-ups that cover the page). */
   var nudge = $('#nudge');
   function hideNudge() { nudge.hidden = true; }
+  function showNudge(offer) {
+    var t = TEXT[offer], c = CARD[offer];
+    $('.nudge-title', nudge).textContent = t.title;
+    $('.nudge-line', nudge).textContent = c.line;
+    var b = $('[data-open-form]', nudge); b.setAttribute('data-open-form', offer); b.textContent = c.button;
+    nudge.setAttribute('aria-label', t.title);
+    nudge.hidden = false;
+  }
   $('.nudge-close', nudge).addEventListener('click', function () { hideNudge(); track('prompt_close'); schedulePrompt(); });
   function canPrompt() { return !getLead() && !dlg.open && !viewer.open; }
 
@@ -345,8 +377,9 @@
     promptTimer = setTimeout(function () {
       if (getLead()) return;
       if (!canPrompt() || typing() || !nudge.hidden || document.hidden) { schedulePrompt(); return; }
-      if (IS_PHONE) { nudge.hidden = false; track('prompt_show', { prompt: 'timed_card' }); }
-      else { openForm('price'); track('prompt_show', { prompt: 'timed_popup' }); }
+      var offer = nextOffer();
+      if (IS_PHONE) { showNudge(offer); track('prompt_show', { prompt: 'timed_card', offer: offer }); }
+      else { openForm(offer); track('prompt_show', { prompt: 'timed_popup', offer: offer }); }
     }, CONFIG.promptEverySec * 1000);
   }
   dlg.addEventListener('close', schedulePrompt);
