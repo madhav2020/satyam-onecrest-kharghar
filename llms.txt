@@ -3,8 +3,8 @@
 > One Crest (formerly Codename Showstopper) is a G+31 residential tower by Satyam Developers (R. Gulati Group) and Metro Group on 3.46 acres at Plot 23–26, Sector 20, Kharghar, Navi Mumbai 410210, near Shilp Chowk and opposite Raghunath Vihar. MahaRERA registration: PR1270002601519 (registered as "One Crest Wing AB"). Homes: 2 BHK Label (859 sq ft RERA carpet, from ₹2.48 Cr*), 3 BHK Luxe (1,232 sq ft, from ₹3.81 Cr*), 3 BHK Couture (1,275 sq ft, from ₹4.02 Cr*), 4 BHK Atelier (1,942 sq ft, from ₹5.99 Cr*), 4 BHK Maison En-Suite (2,012 sq ft, from ₹6.17 Cr*) and Jodi units (on request). *Agreement value, 5th floor, as on 18 July 2026; stamp duty, registration and GST extra. Possession: December 2031 as per MahaRERA (developer's target: December 2030). The Stellar Lobby and Verve Clubhouse are furnished with Roberto Cavalli Home Interiors. This site is run by Reco Property LLP, an authorised channel partner (MahaRERA agent A031272503707); it is not the developer's official website. Last updated: 13 November 2026.
 
 ## Key sections
-- [Price list](__SITE_URL__/#price): price and RERA carpet area for every home type
-- [Floor plans](__SITE_URL__/#floor-plans)
-- [Amenities](__SITE_URL__/#amenities): 35+ amenities in Club Verve and the Verde Podium Garden
-- [Location](__SITE_URL__/#location): Central Park and Kharghar Gaon metro stations about 3 minutes away
-- [FAQ](__SITE_URL__/#faq)
+- [Price list](https://onecrest-kharghar.com/#price): price and RERA carpet area for every home type
+- [Floor plans](https://onecrest-kharghar.com/#floor-plans)
+- [Amenities](https://onecrest-kharghar.com/#amenities): 35+ amenities in Club Verve and the Verde Podium Garden
+- [Location](https://onecrest-kharghar.com/#location): Central Park and Kharghar Gaon metro stations about 3 minutes away
+- [FAQ](https://onecrest-kharghar.com/#faq)

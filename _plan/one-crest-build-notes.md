@@ -62,6 +62,6 @@ Built in the cloud workspace while the Mac connection was down. **Copy the conte
 1. ~~Wire the form to the CRM~~ done in v1.7. Left: the `lp_` key at launch; first/last-touch capture (B4–B5) later.
 2. ~~Privacy policy + Terms pages~~ done (v1.8): run by Reco Property LLP, contact = One Crest site office (no email, Madhav's choice); privacy covers the 2-day browser memory, analytics/ad tools and DPDP Act 2023 rights. ⚠️ Add the phone number to both pages when it's decided; adding a privacy email later is recommended (the DPDP Act expects an easy way to reach you).
 3. **Phone / WhatsApp:** set `CONFIG.phone` and `CONFIG.whatsapp` in `main.js`; the buttons appear by themselves.
-4. **Domain:** replace every `__SITE_URL__` (index.html, robots.txt, sitemap.xml, llms.txt, .htaccess) with `https://<domain>` (no trailing slash). The pre-launch check: `grep -rn __SITE_URL__ .` must print nothing.
+4. ~~Domain~~ done 14 Nov: **https://onecrest-kharghar.com** (GoDaddy) is in index.html, robots.txt, sitemap.xml, llms.txt, .htaccess, privacy-policy.html and terms.html. Still to do: point the domain's DNS to the new host, and turn on HTTPS there.
 5. **Name-change page** `/codename-showstopper-is-now-one-crest/` (before the old site goes noindex).
 6. Launch checklist: PageSpeed (mobile), Rich Results Test, WhatsApp preview, fake URL → 404, form → lead in the CRM, Search Console + Bing + IndexNow, old site noindex the same day.

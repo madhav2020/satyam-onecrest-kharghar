@@ -15,4 +15,4 @@ Allow: /
 User-agent: Claude-SearchBot
 Allow: /
 
-Sitemap: __SITE_URL__/sitemap.xml
+Sitemap: https://onecrest-kharghar.com/sitemap.xml
