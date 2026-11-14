@@ -7,7 +7,7 @@
     phone: '+91 97026 73966',  // shown on the call buttons (empty = hidden)
     whatsapp: '919702673966',   // digits only with country code (empty = hidden)
     recoApiUrl: 'https://api.recoproperty.com/api', // RECO CRM API (same as the other landing sites)
-    recoApiKey: '',     // the NEW landing page's lp_ key: create the Landing Page record in the CRM at launch, then paste it here
+    recoApiKey: 'lp_4703be68ffab37e956ff008d',     // the NEW landing page's lp_ key: create the Landing Page record in the CRM at launch, then paste it here
     brochureUrl: '/assets/brochure/one-crest-kharghar-brochure.pdf',
     breakdownUrl: '/assets/data/cost-breakdown.json',
     rememberHours: 48,  // a visitor who filled a form is not asked again for 2 days
