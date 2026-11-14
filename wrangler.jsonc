@@ -1,6 +1,6 @@
 // Cloudflare Workers (static assets only, no server code). Deploys on every push to GitHub main.
 {
-  "name": "onecrest-kharghar",
+  "name": "satyam-onecrest-kharghar",
   "compatibility_date": "2026-11-01",
   "assets": {
     "directory": ".",
