@@ -1,0 +1,21 @@
+# Cloudflare response headers (replaces .htaccess)
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Link: </llms.txt>; rel=describedby
+  Link: </sitemap.xml>; rel=sitemap
+
+# Keep the brochure and the cost data out of search results
+/assets/brochure/*
+  X-Robots-Tag: noindex, nofollow
+/assets/data/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+# Images and media change rarely: cache for a year (file names change when the file changes)
+/assets/images/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/hero/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/floor-plans/*
+  Cache-Control: public, max-age=31536000, immutable

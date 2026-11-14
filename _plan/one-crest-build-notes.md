@@ -52,6 +52,17 @@ Built in the cloud workspace while the Mac connection was down. **Copy the conte
 - **Remaining for launch:** paste the new Landing Page `lp_` key into `CONFIG.recoApiKey` in `main.js` (until then a live site shows "Sorry, that did not go through").
 - Checked with a fake domain + a test key + intercepted CRM calls (no real leads made): bodies correct, URL cleaned, reco_test flag set, a remembered visitor's plan request sent without the form, and a CRM refusal shows an error and doesn't remember the visitor.
 
+## v1.9 (14 Nov): ready for Cloudflare
+- **Hosting = Cloudflare Workers, static assets only** (Cloudflare's recommended way for new static sites in 2026), deployed from GitHub on every push to `main`.
+  - `wrangler.jsonc`: name `onecrest-kharghar`, assets from the repo root, `not_found_handling: 404-page`, `html_handling: auto-trailing-slash` (so `/privacy-policy` works and `/privacy-policy.html` redirects to it).
+  - `.assetsignore`: keeps `_plan/`, `_inputs/`, `README.md`, `wrangler.jsonc`, `.git*`, `.htaccess` off the website.
+  - `_headers` replaces `.htaccess` (deleted): nosniff, referrer policy, `Link` headers for llms.txt + sitemap, `X-Robots-Tag: noindex` on the brochure and cost data, 1-year cache on images.
+  - HTTPS and the www → non-www redirect are set in the Cloudflare dashboard (Redirect Rule), not in files.
+- **Phone / WhatsApp:** +91 97026 73966 (call + WhatsApp buttons, footer, privacy and terms contact).
+- **Legal links are now extensionless:** `/privacy-policy`, `/terms` (canonicals too).
+- **New page `/codename-showstopper-is-now-one-crest/`:** what changed / what stayed (developer, site, RERA, tower, homes), links to price, plans, amenities, location; Article + Breadcrumb schema; in the sitemap and llms.txt; linked from the home page's name section.
+- Checked in Cloudflare's local simulator (`wrangler dev` 4.162): all pages 200, `.html` → clean URL, unknown URL → real 404 with our 404 page, private folders → 404, headers correct; browser: phone/WhatsApp buttons work, no errors.
+
 ## Checks done
 - JSON-LD parses; 1 H1; all local files exist (except privacy/terms, see below); JS syntax OK
 - Headless Chrome, phone (390 px) and desktop (1440 px): no console errors, no failed requests, **CLS 0.000**, LCP = H1 at ~0.1 s (local)
@@ -61,7 +72,7 @@ Built in the cloud workspace while the Mac connection was down. **Copy the conte
 ## Still to do (in this order)
 1. ~~Wire the form to the CRM~~ done in v1.7. Left: the `lp_` key at launch; first/last-touch capture (B4–B5) later.
 2. ~~Privacy policy + Terms pages~~ done (v1.8): run by Reco Property LLP, contact = One Crest site office (no email, Madhav's choice); privacy covers the 2-day browser memory, analytics/ad tools and DPDP Act 2023 rights. ⚠️ Add the phone number to both pages when it's decided; adding a privacy email later is recommended (the DPDP Act expects an easy way to reach you).
-3. **Phone / WhatsApp:** set `CONFIG.phone` and `CONFIG.whatsapp` in `main.js`; the buttons appear by themselves.
+3. ~~Phone / WhatsApp~~ done (v1.9).
 4. ~~Domain~~ done 14 Nov: **https://onecrest-kharghar.com** (GoDaddy) is in index.html, robots.txt, sitemap.xml, llms.txt, .htaccess, privacy-policy.html and terms.html. Still to do: point the domain's DNS to the new host, and turn on HTTPS there.
-5. **Name-change page** `/codename-showstopper-is-now-one-crest/` (before the old site goes noindex).
+5. ~~Name-change page~~ done (v1.9).
 6. Launch checklist: PageSpeed (mobile), Rich Results Test, WhatsApp preview, fake URL → 404, form → lead in the CRM, Search Console + Bing + IndexNow, old site noindex the same day.

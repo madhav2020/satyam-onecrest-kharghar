@@ -1,0 +1,10 @@
+# Files in the repo that must NOT be published on the website
+.git
+.gitignore
+.assetsignore
+wrangler.jsonc
+README.md
+_plan
+_inputs
+.htaccess
+.DS_Store

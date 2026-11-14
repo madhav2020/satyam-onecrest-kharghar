@@ -4,8 +4,8 @@
 
   /* ---------- Settings: fill before launch ---------- */
   var CONFIG = {
-    phone: '',          // e.g. '+91 98xxxxxxxx'  (empty = call buttons stay hidden)
-    whatsapp: '',       // digits only with country code, e.g. '9198xxxxxxxx' (empty = hidden)
+    phone: '+91 97026 73966',  // shown on the call buttons (empty = hidden)
+    whatsapp: '919702673966',   // digits only with country code (empty = hidden)
     recoApiUrl: 'https://api.recoproperty.com/api', // RECO CRM API (same as the other landing sites)
     recoApiKey: '',     // the NEW landing page's lp_ key: create the Landing Page record in the CRM at launch, then paste it here
     brochureUrl: '/assets/brochure/one-crest-kharghar-brochure.pdf',
