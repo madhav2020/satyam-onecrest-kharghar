@@ -256,3 +256,18 @@ details[open] > summary { color: #8a6a2c; }
 @keyframes drift-a { from { transform: scale(1.02) translate(0, 0); } to { transform: scale(1.14) translate(-3%, -1.5%); } }
 @keyframes drift-b { from { transform: scale(1.02) translate(0, 0); } to { transform: scale(1.14) translate(3%, 1.2%); } }
 @media (prefers-reduced-motion: reduce) { .play-tile img { animation: none; } }
+
+/* Pop-up thank-you screen: green tick, message and one button (stays open until the visitor acts) */
+.dlg-done { display: none; text-align: center; padding: 8px 4px 4px; }
+.lead-form.is-done > :not(.dlg-close):not(.dlg-done) { display: none; }
+.lead-form.is-done .dlg-done { display: block; }
+.lead-dialog .done-title { white-space: normal; overflow: visible; padding: 0; margin: 14px 0 6px; font-size: 1.35rem; }
+.done-text { margin: 0 0 18px; color: #4a4a4f; }
+.done-btn { width: 100%; }
+.done-icon { display: block; margin: 0 auto; }
+.done-icon circle { fill: none; stroke: #1f9d55; stroke-width: 3; stroke-dasharray: 145; stroke-dashoffset: 145; animation: done-draw .6s ease-out forwards; }
+.done-icon path { fill: none; stroke: #1f9d55; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 40; stroke-dashoffset: 40; animation: done-draw .35s .5s ease-out forwards; }
+.lead-form.is-done .done-icon { animation: done-pop .4s .8s ease-out both; }
+@keyframes done-draw { to { stroke-dashoffset: 0; } }
+@keyframes done-pop { 0% { transform: scale(1); } 50% { transform: scale(1.12); } 100% { transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .done-icon circle, .done-icon path, .lead-form.is-done .done-icon { animation: none; stroke-dashoffset: 0; } }

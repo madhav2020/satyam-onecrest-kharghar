@@ -115,6 +115,25 @@
   var dlg = $('#lead-dialog');
   var dlgForm = $('form', dlg);
   var pending = null; // extra details for the current request (e.g. which plan)
+  var afterDone = null; // what to show once the visitor leaves the thank-you screen
+
+  /* Thank-you screen inside the pop-up: stays until the visitor clicks the button or closes it */
+  function showDone(intent, data) {
+    var first = String(data.name || '').trim().split(' ')[0];
+    var tx = TEXT[intent] || {};
+    var text, btn;
+    if (intent === 'price' || intent === 'exit') { text = 'Your full cost breakdown is ready.'; btn = 'View price breakup'; }
+    else if (intent === 'brochure') { text = 'Your brochure is ready.'; btn = 'Download brochure'; }
+    else if (intent === 'plan' && pending && pending.full) { text = 'The full floor plan is ready.'; btn = 'View floor plan'; }
+    else if (intent === 'plan') { text = 'Our team will send the full plan on WhatsApp shortly.'; btn = 'Close'; }
+    else { text = tx.done || 'Our team will contact you shortly.'; btn = 'Close'; }
+    $('.done-title', dlg).textContent = 'Thank you, ' + first + '!';
+    $('.done-text', dlg).textContent = text;
+    $('.done-btn', dlg).textContent = btn;
+    afterDone = { intent: intent, data: data };
+    dlgForm.classList.add('is-done');
+    $('.done-btn', dlg).focus();
+  }
 
   // Keeps the pop-up heading on one line: shrinks the text a little if it is too wide for the screen
   function fitTitle(h) {
@@ -132,6 +151,7 @@
       return;
     }
     var tx = TEXT[intent] || TEXT.price;
+    dlgForm.classList.remove('is-done'); afterDone = null;
     dlgForm.dataset.intent = intent;
     $('h2', dlg).textContent = tx.title;
     var note = $('.dlg-note', dlg); note.textContent = tx.note || ''; note.hidden = !tx.note;
@@ -146,6 +166,13 @@
     b.addEventListener('click', function () { openForm(b.getAttribute('data-open-form')); });
   });
   $('.dlg-close', dlg).addEventListener('click', function () { dlg.close(); });
+  $('.done-btn', dlg).addEventListener('click', function () { dlg.close(); });
+  dlg.addEventListener('close', function () { // the thank-you screen was closed (button, × or Esc): now show what they asked for
+    if (!afterDone) return;
+    var a = afterDone; afterDone = null;
+    dlgForm.classList.remove('is-done');
+    deliver(a.intent, a.data, false);
+  });
   dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
 
   /* ---------- What happens after a form (or straight away for a remembered visitor) ---------- */
@@ -160,7 +187,7 @@
     } else if (intent === 'plan') {
       var full = pending && pending.full;
       if (full) showImage(full, pending.title);
-      else toast('Thanks, ' + first + '. Our team will send the full plan on WhatsApp shortly.');
+      else if (repeat) toast('Thanks, ' + first + '. Our team will send the full plan on WhatsApp shortly.');
     } else { // price, exit
       renderBreakdown();
       if (repeat) toast('Welcome back, ' + first + '. Here is the full cost breakdown.');
@@ -273,13 +300,12 @@
         saveLead(data);
         track('form_submit_success', { form_intent: intent, interest: data.interest });
         var first = data.name.split(' ')[0];
+        form.reset();
+        if (form === dlgForm && dlg.open) { msg.textContent = ''; showDone(intent, data); return; }
         var done = TEXT[intent] && TEXT[intent].done;
         msg.textContent = 'Thank you, ' + first + '. ' +
           (done ? done : intent === 'brochure' ? 'Your download is starting.' : intent === 'plan' ? '' : 'Here is the full cost breakdown.');
-        form.reset();
-        var closeDelay = done ? 2500 : 900;
-        if (dlg.open) setTimeout(function () { dlg.close(); deliver(intent, data, false); }, closeDelay);
-        else deliver(intent, data, false);
+        deliver(intent, data, false);
       }).catch(function () {
         msg.className = 'form-msg error';
         msg.textContent = 'Sorry, that did not go through. Please try again in a moment.';
