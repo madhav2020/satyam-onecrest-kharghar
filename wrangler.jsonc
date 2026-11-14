@@ -2,6 +2,9 @@
 {
   "name": "satyam-onecrest-kharghar",
   "compatibility_date": "2026-11-01",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "onecrest-kharghar.com", "custom_domain": true }],
   "assets": {
     "directory": ".",
     "not_found_handling": "404-page",
