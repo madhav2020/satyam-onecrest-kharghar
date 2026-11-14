@@ -120,7 +120,7 @@ details > summary { cursor: pointer; font-weight: 600; padding: 12px 0; list-sty
 details[open] > summary { color: #8a6a2c; }
 
 /* Forms */
-.lead-form { display: grid; gap: 12px; }
+.lead-form { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
 .lead-form label { display: grid; gap: 4px; font-weight: 600; font-size: .92rem; }
 .lead-form input, .lead-form select { font: 16px var(--sans); padding: 12px; border-radius: 8px; border: 1px solid #c9c2b5; background: #fff; color: var(--text); }
 .section.dark .lead-form label { color: #f3efe7; }
@@ -211,7 +211,7 @@ details[open] > summary { color: #8a6a2c; }
 
 /* Dialog title on one line */
 .lead-dialog { width: min(460px, 94vw); }
-.lead-dialog h2 { font-size: clamp(1.02rem, 4.5vw, 1.3rem); white-space: nowrap; padding-right: 36px; margin-bottom: .5em; outline: none; }
+.lead-dialog h2 { font-size: clamp(1.02rem, 4.5vw, 1.3rem); white-space: nowrap; overflow: hidden; padding-right: 36px; margin-bottom: .5em; outline: none; }
 .lead-dialog .dlg-close { top: -6px; right: -4px; }
 
 /* Gallery arrows: icon centred in the circle; no scrollbar line under the gallery */

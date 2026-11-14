@@ -90,10 +90,10 @@
     exit: { title: 'Before you go: get the price list', note: 'All 5 One Crest home types with the full cost breakdown.', button: 'Send me the price list' },
     // Extra offers used only by the repeating prompt (rotated at random, never the same one twice in a row)
     visit: { title: 'Book a free site visit', note: 'Visit One Crest at Sector 20, Kharghar, near Shilp Chowk.', button: 'Book my visit', done: 'Our team will call you to fix a visit time.' },
-    'brochure-wa': { title: 'Get the One Crest brochure on WhatsApp', button: 'Send me the brochure', done: 'Our team will send the brochure on WhatsApp shortly.' },
-    details: { title: 'Get One Crest project details and video', note: 'Home types, amenities and the project film.', button: 'Send me the details', done: 'Our team will send the project details and film on WhatsApp shortly.' },
+    'brochure-wa': { title: 'Get the brochure on WhatsApp', button: 'Send me the brochure', done: 'Our team will send the brochure on WhatsApp shortly.' },
+    details: { title: 'Get One Crest details & video', note: 'Home types, amenities and the project film.', button: 'Send me the details', done: 'Our team will send the project details and film on WhatsApp shortly.' },
     expert: { title: 'Talk to our One Crest expert', note: 'A free call about prices, plans and payment.', button: 'Call me back', done: 'Our expert will call you shortly.' },
-    offer: { title: 'Ask about the spot booking offer', note: 'Available only when you book at the site. We will share the details and fix a visit.', button: 'Tell me about the offer', done: 'Our team will call you with the offer details and a visit time.' }
+    offer: { title: 'Ask about spot booking offer', note: 'Available only when you book at the site. We will share the details and fix a visit.', button: 'Tell me about the offer', done: 'Our team will call you with the offer details and a visit time.' }
   };
   // Short text for the small card on phones (same offers as above)
   var CARD = {
@@ -116,6 +116,12 @@
   var dlgForm = $('form', dlg);
   var pending = null; // extra details for the current request (e.g. which plan)
 
+  // Keeps the pop-up heading on one line: shrinks the text a little if it is too wide for the screen
+  function fitTitle(h) {
+    h.style.fontSize = '';
+    var fs = parseFloat(getComputedStyle(h).fontSize);
+    while (h.scrollWidth > h.clientWidth + 1 && fs > 12) { fs -= 0.5; h.style.fontSize = fs + 'px'; }
+  }
   function openForm(intent, extra) {
     pending = extra || null;
     var lead = getLead();
@@ -133,6 +139,7 @@
     $('.form-msg', dlgForm).textContent = '';
     hideNudge();
     if (dlg.showModal) { if (!dlg.open) dlg.showModal(); } else dlg.setAttribute('open', '');
+    fitTitle($('h2', dlg));
     track('form_open', { form_intent: intent });
   }
   $$('[data-open-form]').forEach(function (b) {
